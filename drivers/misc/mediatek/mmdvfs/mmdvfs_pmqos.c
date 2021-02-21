@@ -1688,7 +1688,7 @@ static void mmdvfs_get_larb_node(struct device *dev, u32 larb_id)
 
 	ret = snprintf(larb_name, MAX_LARB_NAME, "larb%d", larb_id);
 	if (ret < 0)
-		pr_notice("snprintf return error, ret:%d, larb_id:%d\n", ret, larb_id);
+		pr_debug("snprintf return error, ret:%d, larb_id:%d\n", ret, larb_id);
 	of_property_for_each_u32(dev->of_node, larb_name, prop, p, value) {
 		if (count >= MAX_PORT_COUNT) {
 			pr_debug("port size is over (%d)\n", MAX_PORT_COUNT);
@@ -1801,7 +1801,7 @@ static void mmdvfs_get_limit_step_node(struct device *dev,
 		result = snprintf(ext_name, sizeof(ext_name) - 1,
 			"%s_limit_%d", freq_name, i);
 		if (result < 0) {
-			pr_notice("snprintf error(%d) limit name:%s id:%d\n",
+			pr_debug("snprintf error(%d) limit name:%s id:%d\n",
 				result, freq_name, i);
 			continue;
 		}
