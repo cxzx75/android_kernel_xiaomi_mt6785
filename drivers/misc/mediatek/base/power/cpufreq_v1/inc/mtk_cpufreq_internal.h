@@ -92,7 +92,7 @@ extern unsigned int func_lv_mask;
 #define cpufreq_ver(fmt, args...)		\
 do {						\
 	if (func_lv_mask)			\
-		tag_pr_info(fmt, ##args);	\
+		tag_pr_debug(fmt, ##args);	\
 } while (0)
 
 #define cpufreq_deferred(fmt, args...)		\
