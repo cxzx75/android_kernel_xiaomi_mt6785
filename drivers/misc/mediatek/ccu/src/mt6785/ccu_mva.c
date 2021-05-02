@@ -28,13 +28,13 @@ int ccu_ion_init(void)
 
 	ccu_lock_ion_client_mutex();
 	if (!_ccu_ion_client && g_ion_device) {
-		LOG_INF_MUST("CCU ION_client need init\n");
+		LOG_DBG_MUST("CCU ION_client need init\n");
 		need_init = MTRUE;
 	}
 
 	if (need_init == MTRUE) {
 		_ccu_ion_client = ion_client_create(g_ion_device, "ccu");
-		LOG_INF_MUST(
+		LOG_DBG_MUST(
 			"CCU ION_client create success: 0x%p\n",
 			_ccu_ion_client);
 	}
@@ -53,13 +53,13 @@ int ccu_ion_uninit(void)
 
 	ccu_lock_ion_client_mutex();
 	if (_ccu_ion_client && g_ion_device) {
-		LOG_INF_MUST("CCU ION_client need uninit\n");
+		LOG_DBG_MUST("CCU ION_client need uninit\n");
 		need_uninit = MTRUE;
 	}
 
 	if (need_uninit == MTRUE) {
 		ion_client_destroy(_ccu_ion_client);
-		LOG_INF_MUST("CCU ION_client destroy done.\n");
+		LOG_DBG_MUST("CCU ION_client destroy done.\n");
 		_ccu_ion_client = NULL;
 	}
 
@@ -213,7 +213,7 @@ int ccu_deallocate_mem(struct CcuMemHandle *memHandle)
 	ion_free(_ccu_ion_client,
 		ccu_buffer_handle[idx].ionHandleKd);
 	if ((memHandle->meminfo.ion_log) && (memHandle->meminfo.size > ION_LOG_SIZE))  //10M
-		LOG_INF_MUST("ion free size = %d, caller = CCU\n", memHandle->meminfo.size);
+		LOG_DBG_MUST("ion free size = %d, caller = CCU\n", memHandle->meminfo.size);
 
 	memset(&(ccu_buffer_handle[idx]), 0,
 		sizeof(struct CcuMemHandle));
@@ -240,7 +240,7 @@ static struct ion_handle *_ccu_ion_alloc(struct ion_client *client,
 
 	if ((ion_log) && (size > ION_LOG_SIZE)) { //10M
 		ts_end = get_ns_systemtime();
-		LOG_INF_MUST("ion alloc size = %d, caller = CCU, costTime = %lu ns\n",
+		LOG_DBG_MUST("ion alloc size = %d, caller = CCU, costTime = %lu ns\n",
 			size, (unsigned long)(ts_end-ts_start));
 	}
 
@@ -371,7 +371,7 @@ struct ion_handle *ccu_ion_import_handle(int fd)
 	}
 
 	handle = ion_import_dma_buf_fd(_ccu_ion_client, fd);
-	LOG_INF_MUST(
+	LOG_DBG_MUST(
 	"ccu_ion_import_fd : %d, %s : 0x%p\n",
 	fd, __func__, handle);
 	if (!(handle)) {
