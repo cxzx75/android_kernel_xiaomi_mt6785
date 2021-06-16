@@ -29,7 +29,7 @@ __attribute__ ((weak))
 unsigned int pmic_read_interface_nolock(unsigned int RegNum, unsigned int *val,
 	unsigned int MASK, unsigned int SHIFT)
 {
-	printk_deferred("[name:spm&]NO %s !!!\n", __func__);
+	pr_debug("[name:spm&]NO %s !!!\n", __func__);
 	return 0;
 }
 
@@ -37,27 +37,27 @@ __attribute__ ((weak))
 unsigned int pmic_config_interface(unsigned int RegNum, unsigned int val,
 	unsigned int MASK, unsigned int SHIFT)
 {
-	printk_deferred("[name:spm&]NO %s !!!\n", __func__);
+	pr_debug("[name:spm&]NO %s !!!\n", __func__);
 	return 0;
 }
 __attribute__ ((weak))
 unsigned int pmic_config_interface_nolock(unsigned int RegNum, unsigned int val,
 	unsigned int MASK, unsigned int SHIFT)
 {
-	printk_deferred("[name:spm&]NO %s !!!\n", __func__);
+	pr_debug("[name:spm&]NO %s !!!\n", __func__);
 	return 0;
 }
 
 __attribute__ ((weak))
 void mt_power_gs_t_dump_suspend(int count, ...)
 {
-	printk_deferred("[name:spm&]NO %s !!!\n", __func__);
+	pr_debug("[name:spm&]NO %s !!!\n", __func__);
 }
 
 __attribute__ ((weak))
 unsigned int _golden_read_reg(unsigned int addr)
 {
-	printk_deferred("[name:spm&][SPM] NO %s !!!\n", __func__);
+	pr_debug("[name:spm&][SPM] NO %s !!!\n", __func__);
 	return 0;
 }
 
@@ -70,7 +70,7 @@ void spm_dump_world_clk_cntcv(void)
 	wlk_cntcv_l = _golden_read_reg(WORLD_CLK_CNTCV_L);
 	wlk_cntcv_h = _golden_read_reg(WORLD_CLK_CNTCV_H);
 
-	printk_deferred("[name:spm&][SPM] wlk_cntcv_l = 0x%x, wlk_cntcv_h = 0x%x\n",
+	pr_debug("[name:spm&][SPM] wlk_cntcv_l = 0x%x, wlk_cntcv_h = 0x%x\n",
 		wlk_cntcv_l, wlk_cntcv_h);
 }
 
@@ -84,7 +84,7 @@ void spm_set_sysclk_settle(void)
 	/* md_settle is keyword for suspend status */
 	aee_sram_printk("md_settle = %u, settle = %u\n",
 		SPM_SYSCLK_SETTLE, settle);
-	printk_deferred("[name:spm&][SPM] md_settle = %u, settle = %u\n",
+	pr_debug("[name:spm&][SPM] md_settle = %u, settle = %u\n",
 		SPM_SYSCLK_SETTLE, settle);
 }
 
@@ -101,7 +101,7 @@ static void spm_dump_pmic_reg(void)
 		ret = pmic_read_interface_nolock(pmic_reg[i], &val, 0xffff, 0);
 		aee_sram_printk("#@# %s(%d) pmic reg(0x%x) = 0x%x\n",
 			__func__, __LINE__, pmic_reg[i], val);
-		printk_deferred("[name:spm&][SPM] #@# %s(%d) pmic reg(0x%x) = 0x%x\n",
+		pr_debug("[name:spm&][SPM] #@# %s(%d) pmic reg(0x%x) = 0x%x\n",
 			__func__, __LINE__, pmic_reg[i], val);
 	}
 #endif /* CONFIG_MTK_PMIC_NEW_ARCH */
@@ -135,7 +135,7 @@ void spm_suspend_pre_process(int cmd, struct pwr_ctrl *pwrctrl)
 	ret = spm_to_sspm_command(cmd, &spm_d);
 	if (ret < 0) {
 		aee_sram_printk("ret %d", ret);
-		printk_deferred("[name:spm&][SPM] ret %d", ret);
+		pr_debug("[name:spm&][SPM] ret %d", ret);
 	}
 #endif /* CONFIG_MTK_TINYSYS_SSPM_SUPPORT */
 
@@ -168,7 +168,7 @@ void spm_suspend_post_process(int cmd, struct pwr_ctrl *pwrctrl)
 	ret = spm_to_sspm_command(cmd, &spm_d);
 	if (ret < 0) {
 		aee_sram_printk("ret %d", ret);
-		printk_deferred("[name:spm&][SPM] ret %d", ret);
+		pr_debug("[name:spm&][SPM] ret %d", ret);
 	}
 #endif /* CONFIG_MTK_TINYSYS_SSPM_SUPPORT */
 }
