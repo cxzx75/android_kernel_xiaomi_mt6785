@@ -27,7 +27,7 @@ static int cl_bcct_klog_on;
 /* ************************************ */
 
 #define mtk_cooler_bcct_dprintk_always(fmt, args...) \
-	pr_notice("[Thermal/TC/bcct]" fmt, ##args)
+	pr_debug("[Thermal/TC/bcct]" fmt, ##args)
 
 #define mtk_cooler_bcct_dprintk(fmt, args...) \
 	do { \
