@@ -150,7 +150,7 @@ static int find_ccci_tag_inf(char *name, char *buf, unsigned int size)
 		return -2;
 
 	curr = (char *)s_g_lk_inf_base;
-	CCCI_UTIL_INF_MSG("------curr tags:%s----------\n", name);
+	CCCI_UTIL_DBG_MSG("------curr tags:%s----------\n", name);
 	for (i = 0; i < s_g_tag_cnt; i++) {
 		/* 1. Copy tag */
 		memcpy_fromio(&tag, curr, sizeof(union u_tag));
@@ -169,11 +169,11 @@ static int find_ccci_tag_inf(char *name, char *buf, unsigned int size)
 			sizeof(int));
 
 		#ifdef LK_LOAD_MD_INFO_DEBUG_EN
-		CCCI_UTIL_INF_MSG("tag->name:%s\n", tag_name);
-		CCCI_UTIL_INF_MSG("tag->data_offset:%d\n", data_offset);
-		CCCI_UTIL_INF_MSG("tag->data_size:%d\n", data_size);
-		CCCI_UTIL_INF_MSG("tag->next_tag_offset:%d\n", next_tag_offset);
-		CCCI_UTIL_INF_MSG("tag value:%d\n", tmp_buf);
+		CCCI_UTIL_DBG_MSG("tag->name:%s\n", tag_name);
+		CCCI_UTIL_DBG_MSG("tag->data_offset:%d\n", data_offset);
+		CCCI_UTIL_DBG_MSG("tag->data_size:%d\n", data_size);
+		CCCI_UTIL_DBG_MSG("tag->next_tag_offset:%d\n", next_tag_offset);
+		CCCI_UTIL_DBG_MSG("tag value:%d\n", tmp_buf);
 		#endif
 
 		/* 2. compare tag value. */
@@ -219,14 +219,14 @@ int ccci_get_opt_val(char *opt_name)
 	for (i = 0; i < ARRAY_SIZE(ccci_fos_setting); i++) {
 		if (strcmp(opt_name, ccci_fos_setting[i].name) == 0) {
 			ret = ccci_fos_setting[i].value;
-			CCCI_UTIL_INF_MSG("%s:%s->%d\n", __func__,
+			CCCI_UTIL_DBG_MSG("%s:%s->%d\n", __func__,
 				opt_name, ret);
 			return ret;
 		}
 	}
 
 	/* not found */
-	CCCI_UTIL_INF_MSG("%s:%s->-1\n", __func__, opt_name);
+	CCCI_UTIL_DBG_MSG("%s:%s->-1\n", __func__, opt_name);
 	return -1;
 }
 EXPORT_SYMBOL(ccci_get_opt_val);
@@ -266,7 +266,7 @@ static void ccci_dump_opt_tbl(void)
 	for (i = 0; i < ARRAY_SIZE(ccci_fos_setting); i++) {
 		ccci_name = ccci_fos_setting[i].name;
 		ccci_value = ccci_fos_setting[i].value;
-		CCCI_UTIL_INF_MSG("FO:%s -> %08x\n", ccci_name, ccci_value);
+		CCCI_UTIL_DBG_MSG("FO:%s -> %08x\n", ccci_name, ccci_value);
 	}
 }
 
@@ -303,9 +303,9 @@ static void parse_option_setting_from_lk(void)
 	}
 
 	if (using_default)
-		CCCI_UTIL_INF_MSG("All option using default setting\n");
+		CCCI_UTIL_DBG_MSG("All option using default setting\n");
 	else {
-		CCCI_UTIL_INF_MSG("LK has new setting, Dump final\n");
+		CCCI_UTIL_DBG_MSG("LK has new setting, Dump final\n");
 		ccci_dump_opt_tbl();
 	}
 
@@ -426,7 +426,7 @@ static void nc_smem_info_parsing(void)
 	}
 
 	for (i = 0; i < num; i++) {
-		CCCI_UTIL_INF_MSG("nc_smem<%d>: ap:0x%08x md:0x%08x[0x%08x]\n",
+		CCCI_UTIL_DBG_MSG("nc_smem<%d>: ap:0x%08x md:0x%08x[0x%08x]\n",
 			s_nc_layout[i].id, s_nc_layout[i].ap_offset,
 			s_nc_layout[i].md_offset, s_nc_layout[i].size);
 	}
@@ -435,12 +435,12 @@ static void nc_smem_info_parsing(void)
 	/* DFD part */
 	if (get_nc_smem_region_info(SMEM_USER_RAW_DFD, NULL, NULL,
 					(unsigned int *)&md1_smem_dfd_size))
-		pr_err("change dfd to: 0x%x\n", md1_smem_dfd_size);
+		CCCI_UTIL_DBG_MSG("change dfd to: 0x%x\n", md1_smem_dfd_size);
 		//CCCI_UTIL_INF_MSG("change dfd to: 0x%x\n", md1_smem_dfd_size);
 	/* AMMS POS part */
 	if (get_nc_smem_region_info(SMEM_USER_RAW_AMMS_POS, NULL, NULL,
 					(unsigned int *)&smem_amms_pos_size))
-		CCCI_UTIL_INF_MSG("change POS to: 0x%x\n", smem_amms_pos_size);
+		CCCI_UTIL_DBG_MSG("change POS to: 0x%x\n", smem_amms_pos_size);
 
 }
 
@@ -508,7 +508,7 @@ OLD_LK_CSMEM:
 	csmem_layout[0].csmem_buffer_size = csmem_info.csmem_buffer_size;
 	csmem_layout[0].md_offset = 0;
 	csmem_layout[0].item_cnt = SMEM_USER_CCB_START;
-	CCCI_UTIL_INF_MSG("ccci_util get csmem: data:%llx data_size:%d\n",
+	CCCI_UTIL_DBG_MSG("ccci_util get csmem: data:%llx data_size:%d\n",
 		csmem_info.csmem_buffer_addr,
 		csmem_info.csmem_buffer_size);
 }
@@ -537,7 +537,7 @@ static void share_memory_info_parsing(void)
 		CCCI_UTIL_ERR_MSG("Invalid ccb info dt para\n");
 	}
 
-	CCCI_UTIL_INF_MSG("ccci_util get ccb: data:%llx data_size:%d\n",
+	CCCI_UTIL_DBG_MSG("ccci_util get ccb: data:%llx data_size:%d\n",
 			ccb_info.ccb_data_buffer_addr,
 			ccb_info.ccb_data_buffer_size);
 
@@ -547,7 +547,7 @@ static void share_memory_info_parsing(void)
 		sizeof(struct _udc_info)) != sizeof(struct _udc_info))
 		CCCI_UTIL_ERR_MSG("Invalid udc layout info dt para\n");
 
-	CCCI_UTIL_INF_MSG(
+	CCCI_UTIL_DBG_MSG(
 		"ccci_util get udc: cache_size:0x%x noncache_size:0x%x\n",
 		udc_size.cache_size, udc_size.noncache_size);
 
@@ -558,7 +558,7 @@ static void share_memory_info_parsing(void)
 			!= sizeof(sib_info))
 		CCCI_UTIL_ERR_MSG("get sib info fail\n");
 
-	CCCI_UTIL_INF_MSG("ccci_util get sib addr: 0x%llx size: %d\n",
+	CCCI_UTIL_DBG_MSG("ccci_util get sib addr: 0x%llx size: %d\n",
 			sib_info.md1_sib_addr, sib_info.md1_sib_size);
 
 	/* Get md1_phy_cap_size  */
@@ -568,7 +568,7 @@ static void share_memory_info_parsing(void)
 			!= sizeof(md1_phy_cap_size))
 		CCCI_UTIL_ERR_MSG("using 0 as phy capture size\n");
 
-	CCCI_UTIL_INF_MSG("ccci_util get md1_phy_cap_size: 0x%x\n",
+	CCCI_UTIL_DBG_MSG("ccci_util get md1_phy_cap_size: 0x%x\n",
 				md1_phy_cap_size);
 
 	/* Get md1_smem_dfd_size  */
@@ -578,7 +578,7 @@ static void share_memory_info_parsing(void)
 			!= sizeof(md1_smem_dfd_size))
 		CCCI_UTIL_ERR_MSG("get smem dfd size fail\n");
 
-	CCCI_UTIL_INF_MSG("ccci_util get md1_smem_dfd_size: %d\n",
+	CCCI_UTIL_DBG_MSG("ccci_util get md1_smem_dfd_size: %d\n",
 			md1_smem_dfd_size);
 
 	/* Get smem_amms_pos_size  */
@@ -586,7 +586,7 @@ static void share_memory_info_parsing(void)
 		sizeof(smem_amms_pos_size)) != sizeof(smem_amms_pos_size))
 		CCCI_UTIL_ERR_MSG("get smem amms pos size fail\n");
 
-	CCCI_UTIL_INF_MSG("ccci_util get smem_amms_pos_size: %d\n",
+	CCCI_UTIL_DBG_MSG("ccci_util get smem_amms_pos_size: %d\n",
 			smem_amms_pos_size);
 
 	/* Get smem_align_padding_size  */
@@ -596,7 +596,7 @@ static void share_memory_info_parsing(void)
 				sizeof(smem_align_padding_size))
 		CCCI_UTIL_ERR_MSG("get smem align padding size fail\n");
 
-	CCCI_UTIL_INF_MSG("ccci_util get smem_align_padding_size: %d\n",
+	CCCI_UTIL_DBG_MSG("ccci_util get smem_align_padding_size: %d\n",
 			smem_align_padding_size);
 
 	/* Get smem cachable offset  */
@@ -607,7 +607,7 @@ static void share_memory_info_parsing(void)
 			!= sizeof(md1_bank4_cache_offset))
 		/* Using 128MB offset as default */
 		md1_bank4_cache_offset = 0x8000000;
-	CCCI_UTIL_INF_MSG("smem cachable offset 0x%X\n",
+	CCCI_UTIL_DBG_MSG("smem cachable offset 0x%X\n",
 				md1_bank4_cache_offset);
 	/* MD*_SMEM_SIZE */
 	md_resv_smem_size[MD_SYS1] = smem_layout.ap_md1_smem_size;
@@ -626,17 +626,17 @@ static void share_memory_info_parsing(void)
 		(unsigned long long)smem_layout.md1_md3_smem_offset);
 	md_resv_smem_addr[MD_SYS3] = (phys_addr_t)(smem_layout.base_addr +
 		(unsigned long long)smem_layout.ap_md3_smem_offset);
-	CCCI_UTIL_INF_MSG("AP  <--> MD1 SMEM(0x%08X):%016llx~%016llx\n",
+	CCCI_UTIL_DBG_MSG("AP  <--> MD1 SMEM(0x%08X):%016llx~%016llx\n",
 			md_resv_smem_size[MD_SYS1],
 			(unsigned long long)md_resv_smem_addr[MD_SYS1],
 			(unsigned long long)(md_resv_smem_addr[MD_SYS1]
 			+ md_resv_smem_size[MD_SYS1]-1));
-	CCCI_UTIL_INF_MSG("MD1 <--> MD3 SMEM(0x%08X):%016llx~%016llx\n",
+	CCCI_UTIL_DBG_MSG("MD1 <--> MD3 SMEM(0x%08X):%016llx~%016llx\n",
 			md1md3_resv_smem_size,
 			(unsigned long long)md1md3_resv_smem_addr,
 			(unsigned long long)(md1md3_resv_smem_addr
 			+ md1md3_resv_smem_size-1));
-	CCCI_UTIL_INF_MSG("AP  <--> MD3 SMEM(0x%08X):%016llx~%016llx\n",
+	CCCI_UTIL_DBG_MSG("AP  <--> MD3 SMEM(0x%08X):%016llx~%016llx\n",
 			md_resv_smem_size[MD_SYS3],
 			(unsigned long long)md_resv_smem_addr[MD_SYS3],
 			(unsigned long long)(md_resv_smem_addr[MD_SYS3]
@@ -659,7 +659,7 @@ static void share_memory_info_parsing(void)
 		sizeof(md_mtee_support)) != sizeof(md_mtee_support))
 		CCCI_UTIL_ERR_MSG("using 0 as MTEE support\n");
 	else
-		CCCI_UTIL_INF_MSG("MTEE support: 0x%x\n", md_mtee_support);
+		CCCI_UTIL_DBG_MSG("MTEE support: 0x%x\n", md_mtee_support);
 
 	nc_smem_info_parsing();
 
@@ -668,7 +668,7 @@ static void share_memory_info_parsing(void)
 	int i;
 
 	for (i = 0; i < csmem_info.item_cnt; i++) {
-		CCCI_UTIL_INF_MSG(
+		CCCI_UTIL_DBG_MSG(
 			"csmem_region[%d][%d]: data_offset:%x data_size:%d\n",
 			i, csmem_layout[i].item_cnt,
 			csmem_layout[i].md_offset,
@@ -695,21 +695,21 @@ static void md_mem_info_parsing(void)
 	}
 
 	find_ccci_tag_inf("hdr_tbl_inf", (char *)md_inf, sizeof(md_inf));
-	CCCI_UTIL_INF_MSG("md_num:%d\n", md_num);
+	CCCI_UTIL_DBG_MSG("md_num:%d\n", md_num);
 	curr = md_inf;
 
 	/* MD ROM and RW part */
 	while (md_num--) {
 		#ifdef LK_LOAD_MD_INFO_DEBUG_EN
-		CCCI_UTIL_INF_MSG("===== Dump modem memory info (%d)=====\n",
+		CCCI_UTIL_DBG_MSG("===== Dump modem memory info (%d)=====\n",
 			(int)sizeof(struct _modem_info));
-		CCCI_UTIL_INF_MSG("base address : 0x%llX\n", curr->base_addr);
-		CCCI_UTIL_INF_MSG("memory size  : 0x%08X\n", curr->size);
-		CCCI_UTIL_INF_MSG("md id        : %d\n", (int)curr->md_id);
-		CCCI_UTIL_INF_MSG("ver          : %d\n", (int)curr->ver);
-		CCCI_UTIL_INF_MSG("type         : %d\n", (int)curr->md_type);
-		CCCI_UTIL_INF_MSG("errno        : %d\n", (int)curr->errno);
-		CCCI_UTIL_INF_MSG("=============================\n");
+		CCCI_UTIL_DBG_MSG("base address : 0x%llX\n", curr->base_addr);
+		CCCI_UTIL_DBG_MSG("memory size  : 0x%08X\n", curr->size);
+		CCCI_UTIL_DBG_MSG("md id        : %d\n", (int)curr->md_id);
+		CCCI_UTIL_DBG_MSG("ver          : %d\n", (int)curr->ver);
+		CCCI_UTIL_DBG_MSG("type         : %d\n", (int)curr->md_type);
+		CCCI_UTIL_DBG_MSG("errno        : %d\n", (int)curr->errno);
+		CCCI_UTIL_DBG_MSG("=============================\n");
 		#endif
 		md_id = (int)curr->md_id;
 		if ((md_id < MAX_MD_NUM_AT_LK)
@@ -723,13 +723,13 @@ static void md_mem_info_parsing(void)
 			else
 				lk_load_img_err_no[md_id] = (int)curr->errno;
 
-			CCCI_UTIL_INF_MSG("md%d lk_load_img_err_no: %d\n",
+			CCCI_UTIL_DBG_MSG("md%d lk_load_img_err_no: %d\n",
 				md_id+1, lk_load_img_err_no[md_id]);
 
 			if (lk_load_img_err_no[md_id] == 0)
 				s_g_md_env_rdy_flag |= 1<<md_id;
 			md_type_at_lk[md_id] = (int)curr->md_type;
-			CCCI_UTIL_INF_MSG(
+			CCCI_UTIL_DBG_MSG(
 				"md%d MemStart: 0x%016llx, MemSize:0x%08X\n",
 				md_id+1,
 				(unsigned long long)md_resv_mem_addr[md_id],
@@ -773,14 +773,14 @@ void __iomem *ccci_map_phy_addr(phys_addr_t phy_addr, unsigned int size)
 	phy_addr &= PAGE_MASK;
 	if (!pfn_valid(__phys_to_pfn(phy_addr))) {
 		map_addr = ioremap_wc(phy_addr, size);
-		CCCI_UTIL_INF_MSG(
+		CCCI_UTIL_DBG_MSG(
 			"ioremap_wc: (%lx %px %d)\n",
 			(unsigned long)phy_addr, map_addr, size);
 	} else {
 		prot = pgprot_writecombine(PAGE_KERNEL);
 		map_addr = (void __iomem *)vmap_reserved_mem(
 			phy_addr, size, prot);
-		CCCI_UTIL_INF_MSG(
+		CCCI_UTIL_DBG_MSG(
 			"vmap_reserved_mem: (%lx %px %d)\n",
 			(unsigned long)phy_addr, map_addr, size);
 	}
@@ -854,11 +854,11 @@ static void lk_info_parsing_v1(unsigned int *raw_ptr)
 
 	memcpy((void *)&lk_inf, raw_ptr, sizeof(struct _ccci_lk_info));
 
-	CCCI_UTIL_INF_MSG("lk info.lk_info_base_addr: 0x%llX\n",
+	CCCI_UTIL_DBG_MSG("lk info.lk_info_base_addr: 0x%llX\n",
 		lk_inf.lk_info_base_addr);
-	CCCI_UTIL_INF_MSG("lk info.lk_info_size:      0x%x\n",
+	CCCI_UTIL_DBG_MSG("lk info.lk_info_size:      0x%x\n",
 		lk_inf.lk_info_size);
-	CCCI_UTIL_INF_MSG("lk info.lk_info_tag_num:   0x%x\n",
+	CCCI_UTIL_DBG_MSG("lk info.lk_info_tag_num:   0x%x\n",
 		lk_inf.lk_info_tag_num);
 	s_g_tag_inf_size = lk_inf.lk_info_size;
 
@@ -893,11 +893,11 @@ static int lk_info_parsing_v2(unsigned int *raw_ptr)
 
 	memcpy((void *)&lk_inf, raw_ptr, sizeof(struct _ccci_lk_info_v2));
 
-	CCCI_UTIL_INF_MSG("lk info.lk_info_base_addr: 0x%llX\n",
+	CCCI_UTIL_DBG_MSG("lk info.lk_info_base_addr: 0x%llX\n",
 		lk_inf.lk_info_base_addr);
-	CCCI_UTIL_INF_MSG("lk info.lk_info_size:      0x%x\n",
+	CCCI_UTIL_DBG_MSG("lk info.lk_info_size:      0x%x\n",
 		lk_inf.lk_info_size);
-	CCCI_UTIL_INF_MSG("lk info.lk_info_tag_num:   0x%x\n",
+	CCCI_UTIL_DBG_MSG("lk info.lk_info_tag_num:   0x%x\n",
 		lk_inf.lk_info_tag_num);
 
 	s_g_lk_ld_md_errno = lk_inf.lk_info_err_no;
@@ -955,7 +955,7 @@ static void verify_md_enable_setting(void)
 		s_g_lk_load_img_status |= LK_KERNEL_SETTING_MIS_SYNC;
 	} else if ((!(s_g_md_usage_case & (1<<MD_SYS1)))
 		&& (!(s_g_md_env_rdy_flag & (1<<MD_SYS1)))) {
-		CCCI_UTIL_INF_MSG("md1: both lk and kernel dis\n");
+		CCCI_UTIL_ERR_MSG("md1: both lk and kernel dis\n");
 		s_g_md_usage_case &= ~(1<<MD_SYS1);
 		/* For this case, clear error */
 		lk_load_img_err_no[MD_SYS1] = 0;
@@ -973,7 +973,7 @@ static void verify_md_enable_setting(void)
 		s_g_lk_load_img_status |= LK_KERNEL_SETTING_MIS_SYNC;
 	} else if ((!(s_g_md_usage_case & (1<<MD_SYS3)))
 		&& (!(s_g_md_env_rdy_flag & (1<<MD_SYS3)))) {
-		CCCI_UTIL_INF_MSG("md3: both lk and kernel dis\n");
+		CCCI_UTIL_ERR_MSG("md3: both lk and kernel dis\n");
 		s_g_md_usage_case &= ~(1<<MD_SYS3);
 		/* For this case, clear error */
 		lk_load_img_err_no[MD_SYS3] = 0;
@@ -1020,13 +1020,13 @@ static void dump_retrieve_info(void)
 		return;
 	}
 
-	CCCI_UTIL_INF_MSG("retrieve number is %d.\n", retrieve_num);
+	CCCI_UTIL_DBG_MSG("retrieve number is %d.\n", retrieve_num);
 
 	for (i = 0; i < retrieve_num; i++) {
 		scnprintf(buf, 32, "retrieve%d", i);
 		if (find_ccci_tag_inf(buf,
 				(char *)&array, sizeof(array))) {
-			CCCI_UTIL_INF_MSG(
+			CCCI_UTIL_DBG_MSG(
 				"AP view(0x%llx ~ 0x%llx), MD view(0x%llx ~ 0x%llx)\n",
 				array[0], array[0] + array[1],
 				array[0] - md1_mem_addr,
@@ -1037,11 +1037,11 @@ static void dump_retrieve_info(void)
 					&& free_in_kernel == 1) {
 				ret = free_reserved_memory(array[0],
 						array[0] + array[1]);
-				CCCI_UTIL_INF_MSG(
+				CCCI_UTIL_DBG_MSG(
 				"free_reserved_memory result=%d\n",
 				ret);
 			} else {
-				CCCI_UTIL_INF_MSG(
+				CCCI_UTIL_DBG_MSG(
 					"no free_in_kernel found, free_in_kernel=%d\n",
 					free_in_kernel);
 			}
@@ -1068,7 +1068,7 @@ static int __init collect_lk_boot_arguments(void)
 	/* This function will initialize s_g_dt_chosen_node */
 	ret = of_scan_flat_dt(early_init_dt_get_chosen, NULL);
 	if (ret == 0) {
-		CCCI_UTIL_INF_MSG("device node no chosen node\n");
+		CCCI_UTIL_ERR_MSG("device node no chosen node\n");
 		return -1;
 	}
 
@@ -1081,7 +1081,7 @@ static int __init collect_lk_boot_arguments(void)
 		goto _common_process;
 	}
 
-	CCCI_UTIL_INF_MSG("ccci,modem_info_v2 not found, try v1\n");
+	CCCI_UTIL_ERR_MSG("ccci,modem_info_v2 not found, try v1\n");
 	raw_ptr = (unsigned int *)of_get_flat_dt_prop(s_g_dt_chosen_node,
 				"ccci,modem_info", NULL);
 	if (raw_ptr != NULL) {
@@ -1089,7 +1089,7 @@ static int __init collect_lk_boot_arguments(void)
 		goto _common_process;
 	}
 
-	CCCI_UTIL_INF_MSG("ccci,modem_info_v1 still not found, using v0!!!\n");
+	CCCI_UTIL_ERR_MSG("ccci,modem_info_v1 still not found, using v0!!!\n");
 	return -1;
 
 _common_process:
@@ -1115,7 +1115,7 @@ _common_process:
 			vunmap(s_g_lk_inf_base);
 			ret = free_reserved_memory(s_g_tag_phy_addr,
 				s_g_tag_phy_addr + MAX_LK_INFO_SIZE);
-			CCCI_UTIL_INF_MSG(
+			CCCI_UTIL_DBG_MSG(
 				"unmap && free reserved tag result=%d\n", ret);
 		}
 	}
@@ -1134,7 +1134,7 @@ int get_lk_load_md_info(char buf[], int size)
 			"LK Load MD:[Enabled](0x%08x)\n",
 			s_g_lk_load_img_status);
 		if (has_write < 0) {
-			CCCI_UTIL_INF_MSG("%s-%d:snprintf fail,has_write=%d,status=%d\n",
+			CCCI_UTIL_ERR_MSG("%s-%d:snprintf fail,has_write=%d,status=%d\n",
 				__func__, __LINE__, has_write, s_g_lk_load_img_status);
 			has_write = 0;
 		} else if (has_write >= size)
@@ -1144,7 +1144,7 @@ int get_lk_load_md_info(char buf[], int size)
 			"LK Load MD:[Disabled](0x%08x)\n",
 			s_g_lk_load_img_status);
 		if (has_write < 0) {
-			CCCI_UTIL_INF_MSG("%s-%d:snprintf fail,has_write=%d,status=%d\n",
+			CCCI_UTIL_ERR_MSG("%s-%d:snprintf fail,has_write=%d,status=%d\n",
 				__func__, __LINE__, has_write, s_g_lk_load_img_status);
 			has_write = 0;
 		} else if (has_write >= size)
@@ -1452,7 +1452,7 @@ static void cal_md_settings(int md_id)
 		md_en = 1;
 
 	if (!(md_en && (s_g_md_usage_case & (1 << md_id)))) {
-		CCCI_UTIL_INF_MSG_WITH_ID(md_id,
+		CCCI_UTIL_DBG_MSG_WITH_ID(md_id,
 			"md%d is disabled\n", (md_id + 1));
 		return;
 	}
@@ -1524,7 +1524,7 @@ static void cal_md_settings(int md_id)
 	md_resv_smem_addr[md_id] = md_resv_mem_list[md_id]
 			+ md_resv_mem_size[md_id];
 
-	CCCI_UTIL_INF_MSG_WITH_ID(md_id,
+	CCCI_UTIL_DBG_MSG_WITH_ID(md_id,
 		"md%d modem_total_size=0x%x,md_size=0x%x, smem_size=0x%x\n",
 		(md_id + 1),
 		md_resv_size_list[md_id], md_resv_mem_size[md_id],
@@ -1545,11 +1545,11 @@ static void cal_md_settings(int md_id)
 			&md_resv_smem_addr[md_id],
 			CCCI_SMEM_ALIGN_MD1);
 
-	CCCI_UTIL_INF_MSG_WITH_ID(md_id,
+	CCCI_UTIL_DBG_MSG_WITH_ID(md_id,
 		"MemStart: %016llx, MemSize:0x%08X\n",
 		(unsigned long long)md_resv_mem_addr[md_id],
 		md_resv_mem_size[md_id]);
-	CCCI_UTIL_INF_MSG_WITH_ID(md_id,
+	CCCI_UTIL_DBG_MSG_WITH_ID(md_id,
 		"SMemStart: %016llx, SMemSize:0x%08X\n",
 		(unsigned long long)md_resv_smem_addr[md_id],
 		md_resv_smem_size[md_id]);
@@ -1561,35 +1561,35 @@ static void cal_md_settings_v2(struct device_node *node)
 	char tmp_buf[30] = {0};
 	int i = 0;
 
-	CCCI_UTIL_INF_MSG("using kernel dt mem setting for md\n");
+	CCCI_UTIL_DBG_MSG("using kernel dt mem setting for md\n");
 
 	/* MD*_SMEM_SIZE */
 	for (i = 0; i < MAX_MD_NUM_AT_LK; i++) {
 		scnprintf(tmp_buf, 30, "mediatek,md%d-smem-size", i+1);
 		if (!of_property_read_u32(node, tmp_buf, &tmp)) {
-			CCCI_UTIL_INF_MSG("DT[%s]:%08X\n", tmp_buf, tmp);
+			CCCI_UTIL_DBG_MSG("DT[%s]:%08X\n", tmp_buf, tmp);
 			md_resv_smem_size[MD_SYS1+i] = tmp;
 		} else
-			CCCI_UTIL_INF_MSG("DT[%s]:%08X\n",
+			CCCI_UTIL_DBG_MSG("DT[%s]:%08X\n",
 				tmp_buf, md_resv_smem_size[MD_SYS1+i]);
 	}
 
 	/* MD1MD3_SMEM_SIZE*/
 	scnprintf(tmp_buf, 30, "mediatek,md1md3-smem-size");
 	if (!of_property_read_u32(node, tmp_buf, &tmp)) {
-		CCCI_UTIL_INF_MSG("DT[%s]:%08X\n", tmp_buf, tmp);
+		CCCI_UTIL_DBG_MSG("DT[%s]:%08X\n", tmp_buf, tmp);
 		md1md3_resv_smem_size = tmp;
 	} else
-		CCCI_UTIL_INF_MSG("DT[%s]:%08X\n",
+		CCCI_UTIL_DBG_MSG("DT[%s]:%08X\n",
 			tmp_buf, md1md3_resv_smem_size);
 
 	/* CFG version */
 	scnprintf(tmp_buf, 30, "mediatek,version");
 	tmp = 0;
 	of_property_read_u32(node, tmp_buf, &tmp);
-	CCCI_UTIL_INF_MSG("DT[%s]:%08X\n", tmp_buf, tmp);
+	CCCI_UTIL_DBG_MSG("DT[%s]:%08X\n", tmp_buf, tmp);
 	if (tmp != 1) {
-		CCCI_UTIL_INF_MSG("Un-support version:%d\n", tmp);
+		CCCI_UTIL_ERR_MSG("Un-support version:%d\n", tmp);
 		return;
 	}
 
@@ -1598,7 +1598,7 @@ static void cal_md_settings_v2(struct device_node *node)
 		if (s_g_md_usage_case & (1 << i)) {
 			md_resv_mem_size[i] = md_resv_size_list[i];
 			md_resv_mem_addr[i] = md_resv_mem_list[i];
-			CCCI_UTIL_INF_MSG(
+			CCCI_UTIL_DBG_MSG(
 				"md%d MemStart: 0x%016llx, MemSize:0x%08X\n",
 				i+1,
 				(unsigned long long)md_resv_mem_addr[i],
@@ -1622,19 +1622,19 @@ static void cal_md_settings_v2(struct device_node *node)
 		md_resv_smem_addr[MD_SYS3] = 0;
 		md_resv_smem_size[MD_SYS3] = 0;
 	}
-	CCCI_UTIL_INF_MSG(
+	CCCI_UTIL_DBG_MSG(
 			"AP  <--> MD1 SMEM(0x%08X):%016llx~%016llx\n",
 			md_resv_smem_size[MD_SYS1],
 			(unsigned long long)md_resv_smem_addr[MD_SYS1],
 			(unsigned long long)(md_resv_smem_addr[MD_SYS1]
 			+ md_resv_smem_size[MD_SYS1]-1));
-	CCCI_UTIL_INF_MSG(
+	CCCI_UTIL_DBG_MSG(
 			"MD1 <--> MD3 SMEM(0x%08X):%016llx~%016llx\n",
 			md1md3_resv_smem_size,
 			(unsigned long long)md1md3_resv_smem_addr,
 			(unsigned long long)(md1md3_resv_smem_addr
 			+ md1md3_resv_smem_size-1));
-	CCCI_UTIL_INF_MSG(
+	CCCI_UTIL_DBG_MSG(
 			"AP  <--> MD3 SMEM(0x%08X):%016llx~%016llx\n",
 			md_resv_smem_size[MD_SYS3],
 			(unsigned long long)md_resv_smem_addr[MD_SYS3],
@@ -1659,7 +1659,7 @@ EXPORT_SYMBOL(get_md_img_type);
 
 void ccci_md_mem_reserve(void)
 {
-	CCCI_UTIL_INF_MSG("%s phased out.\n", __func__);
+	CCCI_UTIL_DBG_MSG("%s phased out.\n", __func__);
 }
 
 #ifdef CONFIG_OF_RESERVED_MEM
@@ -1683,18 +1683,18 @@ int ccci_reserve_mem_of_init(struct reserved_mem *rmem)
 		md_id = MD_SYS3;
 	else {
 		if (strstr(CCCI_MD1MD3_SMEM_RESERVED_KEY, rmem->name)) {
-			CCCI_UTIL_INF_MSG(
+			CCCI_UTIL_DBG_MSG(
 			"reserve_mem_of_init, rptr=0x%pa, rsize=0x%x\n",
 			&rptr, rsize);
 			resv_smem_addr = rptr;
 			resv_smem_size = rsize;
 		} else
-			CCCI_UTIL_INF_MSG("memory reserve key %s not support\n",
+			CCCI_UTIL_ERR_MSG("memory reserve key %s not support\n",
 				rmem->name);
 
 		return 0;
 	}
-	CCCI_UTIL_INF_MSG("reserve_mem_of_init, rptr=0x%pa, rsize=0x%x\n",
+	CCCI_UTIL_DBG_MSG("reserve_mem_of_init, rptr=0x%pa, rsize=0x%x\n",
 			&rptr, rsize);
 	md_resv_mem_list[md_id] = rptr;
 	md_resv_size_list[md_id] = rsize;
@@ -1721,27 +1721,27 @@ int __init ccci_util_fo_init(void)
 	int idx;
 	struct device_node *node = NULL;
 
-	CCCI_UTIL_INF_MSG("%s 0.\n", __func__);
+	CCCI_UTIL_DBG_MSG("%s 0.\n", __func__);
 
-	CCCI_UTIL_INF_MSG("Dump default setting(@P/K)\n");
+	CCCI_UTIL_DBG_MSG("Dump default setting(@P/K)\n");
 	ccci_dump_opt_tbl();
 
 	if (collect_lk_boot_arguments() == 0) {
-		CCCI_UTIL_INF_MSG("using v3.\n");
+		CCCI_UTIL_DBG_MSG("using v3.\n");
 		return 0;
 	}
 
 	node = of_find_compatible_node(NULL, NULL, "mediatek,ccci_util_cfg");
 	if (node == NULL) {
-		CCCI_UTIL_INF_MSG("using v1.\n");
+		CCCI_UTIL_DBG_MSG("using v1.\n");
 
 		/* Calculate memory layout */
 		for (idx = 0; idx < MAX_MD_NUM_AT_LK; idx++)
 			cal_md_settings(idx);
 	} else {
-		CCCI_UTIL_INF_MSG("using v2.\n");
+		CCCI_UTIL_DBG_MSG("using v2.\n");
 		cal_md_settings_v2(node);
 	}
-	CCCI_UTIL_INF_MSG("%s 2.\n", __func__);
+	CCCI_UTIL_DBG_MSG("%s 2.\n", __func__);
 	return 0;
 }
