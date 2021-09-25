@@ -49,7 +49,7 @@ do { \
 	pr_notice("[Thermal/tzcharger]" fmt, ##args)
 
 #define mtktscharger_pr_notice(fmt, args...) \
-	pr_notice("[Thermal/tzcharger]" fmt, ##args)
+	pr_err("[Thermal/tzcharger]" fmt, ##args)
 
 #if defined(CONFIG_MEDIATEK_MT6577_AUXADC)
 struct iio_channel *thermistor_ch2;
@@ -812,10 +812,10 @@ struct thermal_cooling_device *cdev, unsigned long state)
 {
 	cl_dev_sysrst_state = state;
 	if (cl_dev_sysrst_state == 1) {
-		pr_notice("[Thermal/mtktscharger_sysrst] reset, reset, reset!!!\n");
-		pr_notice("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
-		pr_notice("*****************************************\n");
-		pr_notice("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
+		pr_debug("[Thermal/mtktscharger_sysrst] reset, reset, reset!!!\n");
+		pr_debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
+		pr_debug("*****************************************\n");
+		pr_debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
 
 		/* To trigger data abort to reset the system
 		 * for thermal protection.

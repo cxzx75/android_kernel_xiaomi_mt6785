@@ -23,7 +23,7 @@
 
 
 #define mtk_cooler_bcct_2nd_dprintk_always(fmt, args...) \
-	pr_notice("[Thermal/TC/bcct_2nd]" fmt, ##args)
+	pr_debug("[Thermal/TC/bcct_2nd]" fmt, ##args)
 
 #define mtk_cooler_bcct_2nd_dprintk(fmt, args...) \
 	do { \
