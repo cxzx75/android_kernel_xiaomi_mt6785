@@ -2601,7 +2601,7 @@ int fgauge_get_hw_status(
 	gauge_dev->fg_hw_info.time = time;
 
 
-	bm_err("[FGADC_intr_end][%s][read_fg_hw_info] curr_1 %d curr_2 %d Iavg %d sign %d car %d ncar %d time %d\n",
+	bm_debug("[FGADC_intr_end][%s][read_fg_hw_info] curr_1 %d curr_2 %d Iavg %d sign %d car %d ncar %d time %d\n",
 		intr_name, gauge_dev->fg_hw_info.current_1,
 		gauge_dev->fg_hw_info.current_2,
 		gauge_dev->fg_hw_info.current_avg,

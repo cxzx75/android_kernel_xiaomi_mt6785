@@ -700,7 +700,7 @@ bool is_usb_rdy(struct device *dev);
 #else
 bool __attribute__((weak)) is_usb_rdy(void)
 {
-	pr_info("%s is not defined\n", __func__);
+	pr_err("%s is not defined\n", __func__);
 	return false;
 }
 #endif

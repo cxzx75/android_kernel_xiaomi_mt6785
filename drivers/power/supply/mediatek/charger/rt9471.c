@@ -3119,7 +3119,7 @@ static int rt9471_remove(struct i2c_client *client)
 {
 	struct rt9471_chip *chip = i2c_get_clientdata(client);
 
-	dev_info(chip->dev, "%s\n", __func__);
+	dev_dbg(chip->dev, "%s\n", __func__);
 
 	device_remove_file(chip->dev, &dev_attr_shipping_mode);
 	disable_irq(chip->irq);
