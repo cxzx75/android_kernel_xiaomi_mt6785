@@ -43,7 +43,7 @@ static DEFINE_SEMAPHORE(sem_mutex);
 
 static int isTimerCancelled;
 
-static int wmt_tm_debug_log;
+static int wmt_tm_debug_log = 0;
 static DEFINE_MUTEX(WMT_pg_task_lock);
 #define wmt_tm_dprintk(fmt, args...)   \
 do { \

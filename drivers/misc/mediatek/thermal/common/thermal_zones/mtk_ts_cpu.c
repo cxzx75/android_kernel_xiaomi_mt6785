@@ -1824,7 +1824,7 @@ static int tscpu_thermal_resume(struct platform_device *dev)
 		do {
 			temp = (readl(THAHBST0) >> 16);
 			if ((cnt + 1) % 10 == 0)
-				pr_notice("THAHBST0 = 0x%x, cnt = %d, %d\n",
+				pr_debug("THAHBST0 = 0x%x, cnt = %d, %d\n",
 							temp, cnt, __LINE__);
 
 			udelay(50);
@@ -1836,7 +1836,7 @@ static int tscpu_thermal_resume(struct platform_device *dev)
 		do {
 			temp = (readl(THAHBST0) >> 16);
 			if ((cnt + 1) % 10 == 0)
-				pr_notice("THAHBST0 = 0x%x, cnt = %d, %d\n",
+				pr_debug("THAHBST0 = 0x%x, cnt = %d, %d\n",
 							temp, cnt, __LINE__);
 
 			udelay(2);
@@ -2307,7 +2307,7 @@ static void tscpu_thermal_pause(void)
 	do {
 		temp = (readl(THAHBST0) >> 16);
 		if ((cnt + 1) % 10 == 0)
-			pr_notice("THAHBST0 = 0x%x, cnt = %d, %d\n", temp, cnt,
+			pr_debug("THAHBST0 = 0x%x, cnt = %d, %d\n", temp, cnt,
 								__LINE__);
 
 		udelay(50);
@@ -2319,7 +2319,7 @@ static void tscpu_thermal_pause(void)
 	do {
 		temp = (readl(THAHBST0) >> 16);
 		if ((cnt + 1) % 10 == 0)
-			pr_notice("THAHBST0 = 0x%x, cnt = %d, %d\n", temp, cnt,
+			pr_debug("THAHBST0 = 0x%x, cnt = %d, %d\n", temp, cnt,
 								__LINE__);
 
 		udelay(2);
@@ -2370,7 +2370,7 @@ static void tscpu_thermal_release(void)
 	do {
 		temp = (readl(THAHBST0) >> 16);
 		if ((cnt + 1) % 10 == 0)
-			pr_notice("THAHBST0 = 0x%x, cnt = %d, %d\n", temp, cnt,
+			pr_debug("THAHBST0 = 0x%x, cnt = %d, %d\n", temp, cnt,
 								__LINE__);
 
 		udelay(50);
@@ -2382,7 +2382,7 @@ static void tscpu_thermal_release(void)
 	do {
 		temp = (readl(THAHBST0) >> 16);
 		if ((cnt + 1) % 10 == 0)
-			pr_notice("THAHBST0 = 0x%x, cnt = %d, %d\n", temp, cnt,
+			pr_debug("THAHBST0 = 0x%x, cnt = %d, %d\n", temp, cnt,
 								__LINE__);
 
 		udelay(2);
