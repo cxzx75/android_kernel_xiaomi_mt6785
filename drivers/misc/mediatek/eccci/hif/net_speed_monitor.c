@@ -383,7 +383,7 @@ static void dvfs_cal_for_md_net(u64 dl_speed, u64 ul_speed)
 
 		get_speed_str(dl_speed, s_dl_speed_str, 32);
 		get_speed_str(ul_speed, s_ul_speed_str, 32);
-		pr_info("[SPD]UL[%d:%s], DL[%d:%s]{c0:%d|c1:%d|c2:%d|c3:%d|d:%d|i:0x%x|p:0x%x|r:0x%x}\r\n",
+		pr_debug("[SPD]UL[%d:%s], DL[%d:%s]{c0:%d|c1:%d|c2:%d|c3:%d|d:%d|i:0x%x|p:0x%x|r:0x%x}\r\n",
 				ul_idx, s_ul_speed_str, dl_idx, s_dl_speed_str,
 				s_final_cpu_freq[0], s_final_cpu_freq[1],
 				s_final_cpu_freq[2], s_final_cpu_freq[3],

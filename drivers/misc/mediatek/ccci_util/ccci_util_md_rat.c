@@ -395,13 +395,13 @@ int set_soc_md_rt_rat_str(int md_id, char str[])
 	}
 
 	if (!str) {
-		pr_err("CCCI: %s get NULL ptr!\n", __func__);
+		pr_debug("CCCI: %s get NULL ptr!\n", __func__);
 		set_soc_md_rt_rat(md_id, cap, id);
 		return 1;
 	}
 
 	if (strlen(str) == 0) {
-		pr_warn("CCCI: %s str empty, set default value!\n", __func__);
+		pr_debug("CCCI: %s str empty, set default value!\n", __func__);
 		set_soc_md_rt_rat(md_id, cap, id);
 		return 1;
 	}
