@@ -72,6 +72,9 @@ ifeq ($(CONFIG_MTK_FMRADIO),y)
     obj-y += fmradio/
 endif
 
+# Remove debugging
+export TARGET_BUILD_VARIANT=user
+
 # Otherwise we were called directly from the command line;
 # invoke the kernel build system.
 else
