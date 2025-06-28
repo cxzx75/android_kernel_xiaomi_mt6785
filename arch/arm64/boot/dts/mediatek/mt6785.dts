@@ -455,6 +455,17 @@ quiet loop.max_part=16";
 		#clock-cells = <1>;
 	};
 
+	efuse: efuse@11c10000 {
+		compatible = "mediatek,devinfo";
+		reg = <0 0x11c10000 0 0x10000>;
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		efuse_segment: segment@78 {
+			reg = <0x78 0x4>;
+		};
+	};
+
 	scpsys: scpsys@10001000 {
 		compatible = "mediatek,scpsys";
 		reg = <0 0x10001000 0 0x1000>,
@@ -3111,6 +3122,8 @@ quiet loop.max_part=16";
 			"mtcmos_mfg_core1",
 			"mtcmos_mfg_core2",
 			"mtcmos_mfg_core3";
+		nvmem-cells = <&efuse_segment>;
+		nvmem-cell-names = "efuse_segment_cell";
 	};
 
 	mali_tb@13fbd000 {
