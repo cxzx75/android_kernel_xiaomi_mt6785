@@ -191,7 +191,7 @@ config SCSI_UFS_CRYPTO
 config MTK_UFS_BLOCK_IO_LOG
 	bool "UFS Block IO log"
 	depends on MTK_BLOCK_TAG && SCSI_UFS_MEDIATEK
-	default y
+	default n
 	help
 	  Enable IO trace for performance analysis and application access
 	  pattern study.
