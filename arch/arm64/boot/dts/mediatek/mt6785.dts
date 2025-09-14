@@ -257,7 +257,7 @@ loop.max_part=7";
 
 		cpu6: cpu@102 {
 			device_type = "cpu";
-			compatible = "arm,cortex-a75";
+			compatible = "arm,cortex-a76";
 			reg = <0x0600>;
 			enable-method = "psci";
 			clock-frequency = <2171000000>;
@@ -270,7 +270,7 @@ loop.max_part=7";
 
 		cpu7: cpu@103 {
 			device_type = "cpu";
-			compatible = "arm,cortex-a75";
+			compatible = "arm,cortex-a76";
 			reg = <0x0700>;
 			enable-method = "psci";
 			clock-frequency = <2171000000>;
