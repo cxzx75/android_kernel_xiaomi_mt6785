@@ -6,32 +6,48 @@
 #include "../../drivers/misc/mediatek/base/power/include/mtk_upower.h"
 
 static unsigned int get_next_freq(struct sugov_policy *sg_policy,
-				  unsigned long util, unsigned long max)
+                  unsigned long util, unsigned long max)
 {
-	struct cpufreq_policy *policy = sg_policy->policy;
-	int idx, target_idx = 0;
-	int cap;
-	int cpu = policy->cpu;
-	struct upower_tbl *tbl;
-	unsigned int freq = arch_scale_freq_invariant() ?
-				policy->cpuinfo.max_freq : policy->cur;
+    struct cpufreq_policy *policy = sg_policy->policy;
+    int idx, target_idx = 0;
+    int cap;
+    int cpu = policy->cpu;
+    struct upower_tbl *tbl;
 
-	util = util * capacity_margin / SCHED_CAPACITY_SCALE;
+    /* CUSTOM: SMART FALLBACK
+     * Default to current frequency to maintain stability if table lookup fails.
+     */
+    unsigned int freq = policy->cur;
 
-	tbl = upower_get_core_tbl(cpu);
-	for (idx = 0; idx < tbl->row_num ; idx++) {
-		cap = tbl->row[idx].cap;
-		if (!cap)
-			break;
+    /* CUSTOM: 5% EFFICIENCY MARGIN (Overflow Protected)
+     * We cast to u64 to ensure the multiplication never overflows, 
+     * even if 'util' spikes unexpectedly high.
+     * 1024 = 100%. 1075 = 105%.
+     */
+    util = (unsigned long)((unsigned long long)util * 1075 / SCHED_CAPACITY_SCALE);
 
-		target_idx = idx;
+    tbl = upower_get_core_tbl(cpu);
 
-		if (cap > util)
-			break;
-	}
+    /* Safety Check: If table is missing, use the 'freq' fallback defined above */
+    if (unlikely(!tbl))
+        goto out;
 
-	freq = mt_cpufreq_get_cpu_freq(cpu, target_idx);
+    for (idx = 0; idx < tbl->row_num ; idx++) {
+        cap = tbl->row[idx].cap;
+        
+        if (!cap)
+            break;
 
-	sg_policy->cached_raw_freq = freq;
-	return cpufreq_driver_resolve_freq(policy, freq);
+        target_idx = idx;
+
+        /* OPTIMIZED: Use '>=' to catch exact matches (Saves Battery) */
+        if (cap >= util)
+            break;
+    }
+
+    freq = mt_cpufreq_get_cpu_freq(cpu, target_idx);
+
+out:
+    sg_policy->cached_raw_freq = freq;
+    return cpufreq_driver_resolve_freq(policy, freq);
 }

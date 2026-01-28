@@ -170,6 +170,21 @@ static void sugov_update_commit(struct sugov_policy *sg_policy, u64 time,
 	if (sugov_up_down_rate_limit(sg_policy, time, next_freq))
 		return;
 
+/* 2. MOD: One-Way Jitter Filter (Battery Bias)
+	 * Only strict when ramping UP.
+	 */
+	if (next_freq > sg_policy->next_freq) {
+		unsigned int delta = next_freq - sg_policy->next_freq;
+		unsigned int threshold = next_freq / 20; /* 5% */
+
+		if (threshold < 50000)
+			threshold = 50000;
+
+		/* If jump is tiny (<5%) and not MAX, cancel it. */
+		if (delta < threshold && next_freq != sg_policy->policy->max)
+			return;
+	}
+	/* IF RAMPING DOWN: Code falls through for instant power savings. */
 	sg_policy->next_freq = next_freq;
 	sg_policy->last_freq_update_time = time;
 
@@ -225,11 +240,23 @@ static unsigned int get_next_freq(struct sugov_policy *sg_policy,
 				  unsigned long util, unsigned long max)
 {
 	struct cpufreq_policy *policy = sg_policy->policy;
+/* REPLACE WITH THIS NEW CODE */
 	unsigned int freq = arch_scale_freq_invariant() ?
 				policy->cpuinfo.max_freq : policy->cur;
+	unsigned long margin;
 
-	freq = freq * util / max;
-	freq = freq / SCHED_CAPACITY_SCALE * capacity_margin;
+	/* MOD: Smart Margin
+	 * If utilization is low (< 25%), use tiny margin (1.03x).
+	 * If utilization is high, use standard margin (1.25x).
+	 */
+	if (util < (max >> 2))
+		margin = SCHED_CAPACITY_SCALE + 32;
+	else
+		margin = capacity_margin;
+
+	/* Calculate freq with overflow protection */
+	freq = div64_ul((u64)freq * util, max);
+	freq = ((u64)freq * margin) >> 10;
 
 	sg_policy->cached_raw_freq = freq;
 #ifdef CONFIG_MTK_TINYSYS_SSPM_SUPPORT
@@ -278,12 +305,17 @@ static void sugov_set_iowait_boost(struct sugov_cpu *sg_cpu, u64 time,
 		max_boost = sg_cpu->iowait_boost_max;
 		max_boost = uclamp_util(cpu_rq(sg_cpu->cpu), max_boost);
 
-		if (sg_cpu->iowait_boost) {
-			sg_cpu->iowait_boost <<= 1;
+/* REPLACE WITH THIS NEW CODE */
+		/* MOD: Jump Start Logic
+		 * If starting from 0, jump straight to 50% max_boost (Speed).
+		 * If already boosting, increase slowly by 25% (Battery).
+		 */
+		if (!sg_cpu->iowait_boost) {
+			sg_cpu->iowait_boost = max_boost >> 1;
+		} else {
+			sg_cpu->iowait_boost += sg_cpu->iowait_boost >> 2;
 			if (sg_cpu->iowait_boost > max_boost)
 				sg_cpu->iowait_boost = max_boost;
-		} else {
-			sg_cpu->iowait_boost = sg_cpu->min_boost;
 		}
 	} else if (sg_cpu->iowait_boost) {
 		s64 delta_ns = time - sg_cpu->last_update;
@@ -297,22 +329,29 @@ static void sugov_set_iowait_boost(struct sugov_cpu *sg_cpu, u64 time,
 }
 
 static void sugov_iowait_boost(struct sugov_cpu *sg_cpu, unsigned long *util,
-			       unsigned long *max)
+                   unsigned long *max)
 {
-	unsigned int boost_util, boost_max;
+    /* CUSTOM: DISABLE IOWAIT BOOST
+     * Prevents the CPU from spiking to max frequency just because 
+     * it is waiting for the storage (I/O). Saves huge battery.
+     */
+    return;
 
-	if (!sg_cpu->iowait_boost)
-		return;
+    /* Original logic below is now dead code and won't run */
+    unsigned int boost_util, boost_max;
 
-	if (sg_cpu->iowait_boost_pending) {
-		sg_cpu->iowait_boost_pending = false;
-	} else {
-		sg_cpu->iowait_boost >>= 1;
-		if (sg_cpu->iowait_boost < sg_cpu->min_boost) {
-			sg_cpu->iowait_boost = 0;
-			return;
-		}
-	}
+    if (!sg_cpu->iowait_boost)
+        return;
+
+    if (sg_cpu->iowait_boost_pending) {
+        sg_cpu->iowait_boost_pending = false;
+    } else {
+        sg_cpu->iowait_boost >>= 1;
+        if (sg_cpu->iowait_boost < sg_cpu->min_boost) {
+            sg_cpu->iowait_boost = 0;
+            return;
+        }
+    }
 
 	boost_util = sg_cpu->iowait_boost;
 	boost_max = sg_cpu->iowait_boost_max;
@@ -554,6 +593,11 @@ static ssize_t up_rate_limit_us_store(struct gov_attr_set *attr_set,
 
 	if (kstrtouint(buf, 10, &rate_limit_us))
 		return -EINVAL;
+
+	/* CUSTOM: NUCLEAR PROTECTION */
+	/* If userspace/scripts try to set a value lower than 20ms, force 20ms. */
+	if (rate_limit_us < 20000)
+		rate_limit_us = 20000;
 
 	tunables->up_rate_limit_us = rate_limit_us;
 
@@ -822,8 +866,9 @@ static int sugov_init(struct cpufreq_policy *policy)
 		goto stop_kthread;
 	}
 
-	tunables->up_rate_limit_us = cpufreq_policy_transition_delay_us(policy);
-	tunables->down_rate_limit_us = cpufreq_policy_transition_delay_us(policy);
+/* Base from policy alamin*/
+	tunables->up_rate_limit_us = 20000;
+	tunables->down_rate_limit_us = 1000;
 
 	policy->governor_data = sg_policy;
 	sg_policy->tunables = tunables;
