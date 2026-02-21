@@ -11,4 +11,4 @@
 # GNU General Public License for more details.
 #
 
-obj-y += systracker_interface_v2.o
+obj-$(CONFIG_MTK_SYSTRACKER_V2) += systracker_interface_v2.o
