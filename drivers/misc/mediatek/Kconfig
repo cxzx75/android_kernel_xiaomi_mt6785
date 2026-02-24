@@ -499,7 +499,7 @@ config MTK_AMMS
 
 config MTK_ICE_DEBUG
 	bool "ICE_DEBUG"
-	default y if ARCH_MEDIATEK
+	default n if ARCH_MEDIATEK
 	help
 	  For Mediatek InCircuit Emulator Debug features.
 	  Select "y" if you want to use.
