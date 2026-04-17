@@ -314,7 +314,6 @@ static void gf_spi_clk_enable(struct gf_device *gf_dev, u8 bonoff)
 	static int count = 0;
 	gf_dev->spi = goodix_dev.spi;
 
-	pr_err("%s enter. line:%d. \n", __func__,__LINE__);
 #ifdef CONFIG_MTK_CLKMGR
         if (bonoff && (count == 0)) {
                 gf_debug(DEBUG_LOG, "%s, start to enable spi clk && count = %d.\n", __func__, count);
@@ -327,13 +326,10 @@ static void gf_spi_clk_enable(struct gf_device *gf_dev, u8 bonoff)
     }
 #else
 
-
 	if (bonoff && (count == 0)) {
-		pr_err("%s line:%d enable spi clk\n", __func__,__LINE__);
 		mt_spi_enable_master_clk(gf_dev->spi);
 		count = 1;
 	} else if ((count > 0) && (bonoff == 0)) {
-		pr_err("%s line:%d disable spi clk\n", __func__,__LINE__);
 		mt_spi_disable_master_clk(gf_dev->spi);
 		count = 0;
 	}
@@ -1799,7 +1795,6 @@ static int proc_show_ver(struct seq_file *file,void *v)
 
 static int proc_open(struct inode *inode,struct file *file)
 {
-	pr_info("goodix proc_open\n");
 	single_open(file,proc_show_ver,NULL);
 	return 0;
 }
@@ -1884,7 +1879,6 @@ static int gf_probe(struct platform_device  *pdev)
 	gf_get_sensor_dts_info();
 
 	/*enable the power*/
-	pr_err("%s %d now get dts info done!",__func__, __LINE__);
 	gf_hw_power_enable(gf_dev, 1);
 	gf_bypass_flash_gpio_cfg();
 
@@ -2052,7 +2046,6 @@ static int gf_probe(struct platform_device  *pdev)
 	gf_dev->probe_finish = 1;
 	gf_dev->is_sleep_mode = 0;
 	gf_debug(INFO_LOG, "%s probe finished\n", __func__);
-	pr_err("%s %d now disable spi clk API",__func__, __LINE__);
 	//gf_spi_clk_enable(gf_dev, 0);
 
 /*
@@ -2211,14 +2204,13 @@ static int check_hwid(struct spi_device *spi)
 			goodix_fp_exist = true;
 			//set_fp_vendor(FP_VENDOR_GOODIX);
 			memcpy(&uuid_fp , &uuid_ta_gf ,sizeof(struct TEEC_UUID));
-			pr_err("%s %d Goodix fingerprint sensor detected\n", __func__, __LINE__);
+			pr_info("%s %d Goodix fingerprint sensor detected\n", __func__, __LINE__);
 			gf_spi_clk_enable(gf_dev, 0);
 			return 0;
 		}
 	} while (retry < 2);
 err_buf:
 	goodix_fp_exist = false;
-	pr_err("%s cannot find goodix sensor,now exit\n", __func__);
 	gf_hw_power_enable(gf_dev, 0);
 	gf_spi_clk_enable(gf_dev, 0);
 	kfree(gf_dev->spi_buffer);
@@ -2233,19 +2225,14 @@ static int __init gf_init(void)
 {
 	int status = 0;
 
-	FUNC_ENTRY();
-	pr_err("%s %d\n", __func__, __LINE__);
-
 	if (fpc1022_fp_exist) {
-		pr_err("%s FPC sensor has been detected, so exit Goodxi sensor detect.\n",__func__);
+		pr_info("%s FPC sensor has been detected, so exit Goodxi sensor detect.\n",__func__);
 		return -EINVAL;
 	}
 	if (0 != platform_driver_register(&gf_platform_driver)) {
 		pr_err(KERN_INFO "%s: register platform driver fail\n",
 		       __func__);
 		return -EINVAL;
-	} else {
-		pr_err(KERN_INFO "%s: register platform driver success\n",__func__);
 	}
 	if (spi_fingerprint == NULL) {
 		pr_err("%s Line:%d spi device is NULL,cannot spi transfer\n",
@@ -2264,8 +2251,6 @@ static int __init gf_init(void)
 		if (NULL == proc_entry) {
 			pr_err("GF3626 Couldn't create proc entry!");
 			return -ENOMEM;
-		} else {
-			pr_err("GF3626 Create proc entry success!");
 		}
 
 		goodix_fp_exist = true;

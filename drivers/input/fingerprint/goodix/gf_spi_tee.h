@@ -27,12 +27,7 @@
 /* debug log setting */
 u8 g_debug_level = DEBUG_LOG;
 
-#define gf_debug(level, fmt, args...) do { \
-			if (g_debug_level >= level) {\
-				pr_warn("[gf] " fmt, ##args); \
-			} \
-		} while (0)
-
+#define gf_debug(level, fmt, args...) ((void)0)
 #define FUNC_ENTRY()  gf_debug(DEBUG_LOG, "%s, %d, enter\n", __func__, __LINE__)
 #define FUNC_EXIT()  gf_debug(DEBUG_LOG, "%s, %d, exit\n", __func__, __LINE__)
 
