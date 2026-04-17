@@ -3205,8 +3205,6 @@ static int mt6785_afe_runtime_suspend(struct device *dev)
 	unsigned int value;
 	int ret;
 
-	dev_info(afe->dev, "%s()\n", __func__);
-
 	if (!afe->regmap)
 		goto skip_regmap;
 
@@ -3245,8 +3243,6 @@ static int mt6785_afe_runtime_resume(struct device *dev)
 {
 	struct mtk_base_afe *afe = dev_get_drvdata(dev);
 	int ret;
-
-	dev_info(afe->dev, "%s()\n", __func__);
 
 	ret = mt6785_afe_enable_clock(afe);
 	if (ret)
