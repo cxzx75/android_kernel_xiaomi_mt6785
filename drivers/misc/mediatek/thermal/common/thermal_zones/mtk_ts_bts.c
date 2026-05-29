@@ -99,7 +99,7 @@ int bts_cur_temp = 1;
 #define mtkts_bts_dprintk(fmt, args...)   \
 do {                                    \
 	if (mtkts_bts_debug_log) {                \
-		pr_notice("[Thermal/TZ/BTS]" fmt, ##args); \
+		pr_debug("[Thermal/TZ/BTS]" fmt, ##args); \
 	}                                   \
 } while (0)
 

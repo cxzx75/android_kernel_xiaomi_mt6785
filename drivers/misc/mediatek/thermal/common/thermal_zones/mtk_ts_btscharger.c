@@ -46,10 +46,10 @@ do { \
 } while (0)
 
 #define mtktscharger_dprintk_always(fmt, args...) \
-	pr_notice("[Thermal/tzcharger]" fmt, ##args)
+	pr_debug("[Thermal/TZcharger]" fmt, ##args)
 
 #define mtktscharger_pr_notice(fmt, args...) \
-	pr_err("[Thermal/tzcharger]" fmt, ##args)
+	pr_debug("[Thermal/tzcharger]" fmt, ##args)
 
 #if defined(CONFIG_MEDIATEK_MT6577_AUXADC)
 struct iio_channel *thermistor_ch2;

@@ -106,7 +106,7 @@ do {                                    \
 } while (0)
 
 #define mtkts_btspdchg_printk(fmt, args...) \
-pr_notice("[Thermal/TZ/BTSPDCHG]" fmt, ##args)
+pr_debug("[Thermal/TZ/BTSPDCHG]" fmt, ##args)
 
 
 #if defined(CONFIG_MEDIATEK_MT6577_AUXADC)
@@ -578,7 +578,7 @@ static int get_hw_btspdchg_temp(void)
 
 	if(NULL == thermistor_ch5)
 		return 0;	
-	pr_err("%s	%d thermistor_ch5 not NULL ...... \n", __func__, __LINE__);
+	pr_debug("%s	%d thermistor_ch5 not NULL ...... \n", __func__, __LINE__);
 
 
 #if defined(CONFIG_MEDIATEK_MT6577_AUXADC)
