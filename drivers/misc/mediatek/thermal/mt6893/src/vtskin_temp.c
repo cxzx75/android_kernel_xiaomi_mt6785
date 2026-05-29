@@ -165,12 +165,12 @@ static int g_resume_done = 1;
 #define mtktsvtskin_dprintk(fmt, args...)   \
 do {                                    \
 	if (mtktsvtskin_debug_log) {                \
-		pr_notice("[Thermal/TZ/VTSKIN]" fmt, ##args); \
+		pr_debug("[Thermal/TZ/VTSKIN]" fmt, ##args); \
 	}                                   \
 } while (0)
 
 #define mtktsvtskin_printk(fmt, args...)   \
-pr_notice("[Thermal/TZ/VTSKIN]" fmt, ##args)
+pr_debug("[Thermal/TZ/VTSKIN]" fmt, ##args)
 
 
 //change to enum

@@ -106,7 +106,7 @@ do {                                    \
 } while (0)
 
 #define mtkts_btsmcam_printk(fmt, args...) \
-pr_notice("[Thermal/TZ/BTSMCAM]" fmt, ##args)
+pr_debug("[Thermal/TZ/BTSMCAM]" fmt, ##args)
 
 
 #if defined(CONFIG_MEDIATEK_MT6577_AUXADC)
@@ -578,7 +578,7 @@ static int get_hw_btsmcam_temp(void)
 
 	if(NULL == thermistor_ch4)
 		return 0;	
-	pr_err("%s	%d thermistor_ch4 not NULL ...... \n", __func__, __LINE__);
+	pr_debug("%s	%d thermistor_ch4 not NULL ...... \n", __func__, __LINE__);
 
 #if defined(CONFIG_MEDIATEK_MT6577_AUXADC)
 	ret = iio_read_channel_processed(thermistor_ch4, &val);
